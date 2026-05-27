@@ -2,21 +2,17 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
-
-RUN apt-get update -y && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends ffmpeg curl unzip \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    ffmpeg \
+    curl \
+    bash \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -fsSL https://deno.land/install.sh | sh
+    && rm -rf /var/lib/apt/lists/*
 
+RUN git clone https://github.com/ImAshhhhh/AviaxMusic.git /app
 
-ENV DENO_INSTALL="/root/.deno"
-ENV PATH="${DENO_INSTALL}/bin:${PATH}"
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r requirements.txt
 
-
-RUN pip3 install -U pip && pip3 install -U -r requirements.txt
-
-COPY . .
-
-CMD ["python3", "anony/main.py"]
+CMD ["bash", "start"]
